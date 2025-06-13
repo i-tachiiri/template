@@ -1,0 +1,13 @@
+{
+  "name": "service-starter-kit",
+  "image": "mcr.microsoft.com/devcontainers/dotnet:0-8.0",
+  "features": {
+    "ghcr.io/devcontainers/features/node:1": {
+      "version": "20"
+    },
+    "ghcr.io/devcontainers/features/azure-cli:1": {},
+    "ghcr.io/devcontainers/features/bicep:1": {}
+  },
+  "forwardPorts": [7071],
+  "postCreateCommand": "dotnet --version"
+}
