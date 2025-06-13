@@ -6,10 +6,13 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        service: [foo, bar]
     steps:
       - uses: actions/checkout@v4
       - name: Publish
-        run: dotnet publish src/DesktopApp/DesktopApp.csproj -c Release -o artifacts
+        run: dotnet publish src/${{ matrix.service }}/DesktopApp.${{ matrix.service }}.csproj -c Release -o artifacts
       - name: Upload
         run: bash infra/scripts/upload.sh artifacts \$web
 

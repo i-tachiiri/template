@@ -1,7 +1,8 @@
 # Service Starter Kit Template
-開発環境のテンプレートです。
+開発環境のテンプレートです。マルチサービス化に対応しました。
 
 > **Spec** → see [/spec/template-spec.md](spec/template-spec.md)
+> **Architecture** → see [/docs/architecture.md](docs/architecture.md)
 
 ## Azure AD B2C 設定
 
@@ -52,6 +53,23 @@ docker-compose up -d
 ## Dev Container を利用する
 
 VS Code の Remote Containers 拡張からこのリポジトリを開くと、`.devcontainer` の設定に基づいた開発環境が自動で構築されます。初回セットアップ時に `docker-compose` で SQL Server や Azurite などの依存サービスが起動します。
+
+## Quick Start (New Service)
+
+1. `cp -r src/template src/<name>`
+2. `cp -r infra/svc-template infra/svc-<name>`
+3. `.github/workflows/*` の `matrix.service` に `<name>` を追加
+4. `git push` すれば GitHub Actions がデプロイします。
+## GitHub Secrets
+
+| Name | Purpose |
+| --- | --- |
+| AZURE_SUBSCRIPTION_ID | Subscription ID |
+| AZURE_TENANT_ID | Tenant ID |
+| AZURE_CLIENT_ID | OIDC App ID |
+| B2C_TENANT_NAME | optional |
+| B2C_CLIENT_ID | optional |
+
 
 
 ## テスト実行
