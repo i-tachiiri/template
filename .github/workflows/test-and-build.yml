@@ -15,7 +15,7 @@ jobs:
         run: dotnet restore ServiceStarterKit.sln
       - name: Lint
         run: dotnet format --no-restore --verify-no-changes
-      - name: Test
-        run: dotnet test --no-build --verbosity normal ServiceStarterKit.sln
       - name: Build
         run: dotnet build --no-restore ServiceStarterKit.sln
+      - name: Test
+        run: dotnet test --no-build --verbosity normal ServiceStarterKit.sln
