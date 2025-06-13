@@ -1,0 +1,16 @@
+name: Deploy to Staging
+on:
+  push:
+    branches: [ develop ]
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+      - name: Build
+        run: dotnet build --configuration Release
+      - name: Deploy
+        run: echo "Deploying to staging..."
