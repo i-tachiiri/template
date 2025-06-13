@@ -2,6 +2,7 @@ name: Deploy to Staging
 on:
   push:
     branches: [ develop ]
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -10,7 +11,14 @@ jobs:
       - uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '8.0.x'
-      - name: Build
-        run: dotnet build --configuration Release
-      - name: Deploy
-        run: echo "Deploying to staging..."
+      - name: Publish API
+        run: dotnet publish src/Api/Api.csproj -c Release -o api
+      - name: Deploy to SWA
+        uses: Azure/static-web-apps-deploy@v1
+        with:
+          azure_static_web_apps_api_token: ${{ secrets.AZURE_SWA_TOKEN }}
+          api_location: api
+          app_location: .
+          skip_app_build: true
+          environment: staging
+

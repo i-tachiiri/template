@@ -14,4 +14,16 @@ public static class Telemetry
         using var activity = StartActivity(name);
         return await func(activity);
     }
+
+    public static async Task RunActivityAsync(string name, Func<Activity?, Task> func)
+    {
+        using var activity = StartActivity(name);
+        await func(activity);
+    }
+
+    public static void RunActivity(string name, Action<Activity?> action)
+    {
+        using var activity = StartActivity(name);
+        action(activity);
+    }
 }
