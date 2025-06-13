@@ -16,17 +16,32 @@ services:
     ports:
       - "10000:10000"
       - "10001:10001"
-  funcapp:
+  func-foo:
     build:
-      context: .
-      dockerfile: src/Api/Dockerfile
+      context: ./src/foo
+      dockerfile: Api/Dockerfile
     environment:
       - KeyVault__Url=https://your-keyvault.vault.azure.net/
       - AZURE_STORAGE_CONNECTION_STRING=UseDevelopmentStorage=true
-      - ConnectionStrings__Default=Server=sqlserver,1433;Database=appdb;User Id=sa;Password=Your_password123;Encrypt=False
+      - ConnectionStrings__Default=Server=sqlserver,1433;Database=foo;User Id=sa;Password=Your_password123;Encrypt=False
       - OTEL_EXPORTER_OTLP_ENDPOINT=http://otelcollector:4317
     ports:
       - "7071:80"
+    depends_on:
+      - sqlserver
+      - azurite
+      - otelcollector
+  func-bar:
+    build:
+      context: ./src/bar
+      dockerfile: Api/Dockerfile
+    environment:
+      - KeyVault__Url=https://your-keyvault.vault.azure.net/
+      - AZURE_STORAGE_CONNECTION_STRING=UseDevelopmentStorage=true
+      - ConnectionStrings__Default=Server=sqlserver,1433;Database=bar;User Id=sa;Password=Your_password123;Encrypt=False
+      - OTEL_EXPORTER_OTLP_ENDPOINT=http://otelcollector:4317
+    ports:
+      - "7072:80"
     depends_on:
       - sqlserver
       - azurite

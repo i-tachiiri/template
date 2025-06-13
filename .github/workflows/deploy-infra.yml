@@ -1,22 +1,41 @@
 name: Deploy Infrastructure
 on:
   workflow_dispatch:
-  push:
-    tags:
-      - 'v*'
 
 jobs:
-  deploy:
+  common:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: azure/login@v1
         with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
-      - name: Deploy Bicep
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+      - name: Deploy common modules
         run: |
           az deployment group create \
-            --resource-group ${{ secrets.AZURE_RG }} \
-            --template-file infra/sql.bicep \
-            --parameters administratorPassword=${{ secrets.SQL_ADMIN_PASSWORD }}
+            --resource-group ${{ vars.AZURE_RG }} \
+            --template-file infra/common/network.bicep \
+            --parameters prefix=demo
+
+  service:
+    needs: common
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        service: [foo, bar]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: azure/login@v1
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+      - name: Deploy service ${{ matrix.service }}
+        run: |
+          az deployment group create \
+            --resource-group ${{ vars.AZURE_RG }} \
+            --template-file infra/svc-${{ matrix.service }}/main.bicep \
+            --parameters prefix=demo env=prod
 

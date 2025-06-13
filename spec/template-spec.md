@@ -51,56 +51,25 @@
 
 ---
 
-## 3. Repository Layout (Mono‑Repo)
+## 3. Repository Layout
 
 ```text
 /  (root)
-├─ .github/
-│   ├─ workflows/
-│   │   ├─ test-and-build.yml
-│   │   ├─ deploy-infra.yml         # IaC first‑run or on tag
-│   │   ├─ deploy-to-staging.yml    # push → develop
-│   │   ├─ deploy-to-azure.yml      # push → main
-│   │   └─ release-desktop.yml
-│   ├─ ISSUE_TEMPLATE/
-│   └─ PULL_REQUEST_TEMPLATE.md
-├─ .devcontainer/
-├─ .vscode/
-├─ infra/             # Bicep or Terraform modules
-├─ env/               # Environment variables & appsettings per stage
-│   ├─ dev/
-│   ├─ stg/
-│   └─ prod/
-├─ docs/
-│   ├─ architecture.md
-│   └─ site/          # DocFX / MkDocs generated site
-├─ spec/              # This specification (AI can easily ingest)
+├─ infra/
+│   ├─ common/              # Shared modules (VNet, KeyVault, Log, AD B2C, OTEL Collector)
+│   ├─ svc-foo/             # Service‑specific IaC (Functions, SWA, SQL, Blob, App Insights)
+│   └─ svc-bar/
 ├─ src/
-│   ├─ Api/           # Azure Functions
-│   │   └─ Dockerfile     # Container build for Functions
-│   ├─ WebApp/        # Blazor WASM
-│   ├─ DesktopApp/    # Avalonia
-│   ├─ Domain/        # Domain models (pure C#)
-│   ├─ Application/   # CQRS / use‑cases (MediatR)
-│   ├─ Infrastructure/# External SDK adapters (SQL, Blob, B2C, KeyVault)
-│   ├─ Contracts/     # DTOs & gRPC/HTTP contracts
-│   └─ Shared/        # Cross‑cutting helpers
-├─ tests/
-│   ├─ Api.UnitTests/
-│   ├─ Api.IntegrationTests/
-│   ├─ Application.Tests/
-│   └─ Contracts.Tests/
-├─ scripts/
-├─ .editorconfig
-├─ THIRD_PARTY_NOTICES.md
-├─ packages-microsoft-prod.deb    # Apt source for .NET SDK on Ubuntu
-├─ dependabot.yml
-├─ codeql-analysis.yml
-├─ docker-compose.yml
-├─ global.json                 # .NET SDK pin
-├─ ServiceStarterKit.sln       # Solution file
-└─ README.md
+│   ├─ foo/                 # Web/API/Desktop for foo
+│   └─ bar/
+…
 ```
+
+### 3.1 Naming Conventions
+
+* Prefix every cloud resource with `${svcName}-${env}` (eg. `foo-dev-func`).
+* Environment diffs reside in `infra/svc-*/<env>.params.json`.
+* Global/shared resources live in `infra/common` and are **referenced** (Bicep `existing`) from service modules.
 
 ---
 
@@ -195,7 +164,24 @@ updates.
 
 ---
 
-## 7. Desktop Distribution Options
+## 7 Service Scale‑Out Guidelines
+
+* **Modular IaC** – `infra/common` provisions once‑per‑subscription items:
+  * VNet + Private DNS
+  * Azure AD B2C tenant & app registrations
+  * OTEL Managed Collector + Log Analytics Workspace
+  * Shared Key Vault (per env)
+* **Service Modules** – `infra/svc-*` provisions per‑service items:
+  * Azure Functions (Isolated Worker, .NET 8)
+  * Azure Static Web Apps + staging slot
+  * Azure SQL DB (Serverless tier)
+  * Storage Account + containers (private + public)
+  * Application Insights instance (linked to OTEL)
+* **One Workflow, Many Services** – GitHub Actions `matrix.service` loops through `foo`, `bar`, …
+* **Copy‑&‑Go** – To add a service: 1️⃣ copy `src/template` ➜ `src/<new>`; 2️⃣ copy `infra/svc-template` ➜ `infra/svc-<new>`; 3️⃣ add `<new>` to matrix list; 4️⃣ push.
+
+---
+## 8. Desktop Distribution Options
 
 | Scale                | Channel                             | Notes                                              |
 | -------------------- | ----------------------------------- | -------------------------------------------------- |
@@ -211,13 +197,13 @@ CI step:
 
 ---
 
-## 8. Collaboration Guidelines (unchanged)
+## 9. Collaboration Guidelines (unchanged)
 
 *See earlier section – branching / commits / docs.*
 
 ---
 
-## 9. README Skeleton (excerpt)
+## 10. README Skeleton (excerpt)
 
 Add quick link to spec so AI tools pick it up:
 
@@ -227,7 +213,7 @@ Add quick link to spec so AI tools pick it up:
 
 ---
 
-## 10. FAQ (addition)
+## 11. FAQ (addition)
 
 * **"Where is the installer feed?"** – `https://<storage>.blob.core.windows.net/public/updates`
 * **"Blob 403 locally"** – Run Azurite and set `AZURE_STORAGE_CONNECTION_STRING=UseDevelopmentStorage=true`.

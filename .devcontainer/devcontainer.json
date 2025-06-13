@@ -8,6 +8,11 @@
     "ghcr.io/devcontainers/features/azure-cli:1": {},
     "ghcr.io/devcontainers/features/bicep:1": {}
   },
-  "forwardPorts": [7071],
+  "forwardPorts": [7071,7072],
+  "mounts": [
+    "source=${localWorkspaceFolder}/infra/common,target=/workspace/infra/common,type=bind",
+    "source=${localWorkspaceFolder}/infra/svc-foo,target=/workspace/infra/svc-foo,type=bind",
+    "source=${localWorkspaceFolder}/infra/svc-bar,target=/workspace/infra/svc-bar,type=bind"
+  ],
   "postCreateCommand": "dotnet --version && docker-compose up -d sqlserver azurite otelcollector"
 }

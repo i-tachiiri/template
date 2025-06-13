@@ -6,6 +6,9 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        service: [foo, bar]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-dotnet@v4
@@ -13,5 +16,5 @@ jobs:
           dotnet-version: '8.0.x'
       - name: Promote staging slot
         run: |
-          az staticwebapp promote --name ${{ secrets.SWA_NAME }} --environment staging
+          az staticwebapp promote --name ${{ secrets.SWA_NAME }}-${{ matrix.service }} --environment staging
 

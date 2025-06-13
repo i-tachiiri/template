@@ -1,12 +1,17 @@
 # Infrastructure
 
-This folder contains Bicep modules and helper scripts for deploying Azure resources.
+This folder contains Bicep modules for the template.
 
-## Azure SQL Database (Serverless)
+```
+infra/
+  common/       # shared modules (VNet, KeyVault, B2C, OTEL)
+  svc-template/ # per-service resources
+  svc-foo/
+  svc-bar/
+```
 
-`sql.bicep` provisions a serverless SQL Database with minimal settings.
-Deploy with:
+Deploy a service module with:
 
 ```bash
-az deployment group create -f infra/sql.bicep -g <resource-group> -p administratorPassword=<password>
+az deployment group create -f infra/svc-foo/main.bicep -g <rg> -p prefix=myapp env=dev
 ```

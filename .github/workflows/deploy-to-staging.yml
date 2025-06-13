@@ -6,19 +6,22 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        service: [foo, bar]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '8.0.x'
       - name: Publish API
-        run: dotnet publish src/Api/Api.csproj -c Release -o api
+        run: dotnet publish src/${{ matrix.service }}/Api/Api.csproj -c Release -o api
       - name: Deploy to SWA
         uses: Azure/static-web-apps-deploy@v1
         with:
           azure_static_web_apps_api_token: ${{ secrets.AZURE_SWA_TOKEN }}
           api_location: api
-          app_location: .
+          app_location: src/${{ matrix.service }}/WebApp
           skip_app_build: true
           environment: staging
 
