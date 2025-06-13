@@ -36,6 +36,10 @@ docker run -p 7071:80 funcapp
 ### ローカル Blob Storage
 
 SQL Server と Azurite (Blob エミュレーター) を起動するには `docker-compose up -d` を実行します。Functions からは `AZURE_STORAGE_CONNECTION_STRING=UseDevelopmentStorage=true` を設定してアクセスします。
+
+### OpenTelemetry Collector
+
+`docker-compose` には Azure Monitor へ転送する OpenTelemetry Collector コンテナー `otelcollector` が含まれます。環境変数 `AZURE_MONITOR_CONNECTION_STRING` を指定すると、トレースとメトリックが Application Insights へ送信されます。
 =======
 ## docker-compose で依存サービスを起動する
 
