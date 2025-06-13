@@ -42,6 +42,7 @@
 * `docker‑compose.yml` launches **SQL Server (Linux)** & **Azurite** (Blob emulator).
 * Projects run in VS Code / VS with hot‑reload, hitting container endpoints.
 * **Dev Container** locks .NET SDK, Node, Azure CLI, Bicep versions.
+* **Dockerfile** in `src/Api/` builds the Functions app for container runs.
 
 ---
 
@@ -71,6 +72,7 @@
 ├─ spec/              # This specification (AI can easily ingest)
 ├─ src/
 │   ├─ Api/           # Azure Functions
+│   │   └─ Dockerfile     # Container build for Functions
 │   ├─ WebApp/        # Blazor WASM
 │   ├─ DesktopApp/    # Avalonia
 │   ├─ Domain/        # Domain models (pure C#)
@@ -90,6 +92,7 @@
 ├─ codeql-analysis.yml
 ├─ docker-compose.yml
 ├─ global.json                 # .NET SDK pin
+├─ ServiceStarterKit.sln       # Solution file
 └─ README.md
 ```
 

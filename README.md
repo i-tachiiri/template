@@ -21,3 +21,21 @@ env/
 ```
 
 必要に応じてクライアント ID やシークレットを上書きしてください。Secrets 管理は Key Vault を利用する想定です。
+
+## Azure Functions を Docker で実行する
+
+```bash
+# API コンテナーをビルド
+docker build -t funcapp -f src/Api/Dockerfile src/Api
+
+# ローカルで起動
+docker run -p 7071:80 funcapp
+```
+
+## テスト実行
+
+リポジトリには Solution ファイル `ServiceStarterKit.sln` が含まれています。以下のコマンドで単体テストを実行できます。
+
+```bash
+dotnet test --no-build --verbosity normal ServiceStarterKit.sln
+```
