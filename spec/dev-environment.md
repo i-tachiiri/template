@@ -40,9 +40,13 @@
 ### 2.2 Local
 
 * `docker‑compose.yml` launches **SQL Server (Linux)** & **Azurite** (Blob emulator).
+  Run `docker-compose up -d` to start and `docker-compose down` to stop.
 * Projects run in VS Code / VS with hot‑reload, hitting container endpoints.
 * **Dev Container** locks .NET SDK, Node, Azure CLI, Bicep versions.
 * **Dockerfile** in `src/Api/` builds the Functions app for container runs.
+  Build image via `docker build -t func-api -f src/Api/Dockerfile .`.
+* **Static Web Apps CLI** (`swa start`) serves the Blazor front‑end and proxies
+  the Functions API for full‑stack local testing.
 
 ---
 
@@ -142,6 +146,10 @@ public sealed class AzureBlobStorageService : IBlobStorageService
 * **Auth** – `Microsoft.Authentication.WebAssembly.Msal` w/ B2C.
 * **Typed API Client** – `Refit` wrappers over **Contracts**.
 * **Blob Download** – Use SAS URI returned by API for direct browser download.
+* **SWA Configuration** – `staticwebapp.config.json` routes `/api/*` to
+  Functions and falls back to `index.html` for client routing.
+* **Local dev** – run `swa start` with `dotnet watch` for hot‑reload during
+  development.
 
 ### 4.5 DesktopApp (Avalonia UI)
 
@@ -173,11 +181,15 @@ services:
 
 | Workflow                  | Trigger          | Environment      | Steps (key)                                                 |
 | ------------------------- | ---------------- | ---------------- | ----------------------------------------------------------- |
-| **test-and-build.yml**    | PR → any         | –                | Lint → Unit → Build                                         |
+| **test-and-build.yml**    | PR → any         | –                | Lint → `dotnet test` → Build                                 |
 | **deploy-infra.yml**      | Manual / Tag     | `prod`           | Azure login → IaC deploy                                    |
 | **deploy-to-staging.yml** | Push → `develop` | `stg` RG & slots | Build Web+API → SWA *staging* slot deploy                   |
 | **deploy-to-azure.yml**   | Push → `main`    | `prod`           | Promote SWA slot → production                               |
 | **release-desktop.yml**   | Release draft    | –                | Publish → Sign → Notarize → Upload → (optional) Blob upload |
+
+All workflows run automatically via **GitHub Actions**. `test-and-build.yml` ensures
+unit tests pass before merging, while the deploy pipelines push to Azure on branch
+updates.
 
 ---
 
