@@ -1,0 +1,16 @@
+version: '3.8'
+services:
+  sqlserver:
+    image: mcr.microsoft.com/azure-sql-edge
+    environment:
+      - ACCEPT_EULA=1
+      - MSSQL_SA_PASSWORD=Your_password123
+    ports:
+      - "1433:1433"
+  azurite:
+    image: mcr.microsoft.com/azure-storage/azurite
+    environment:
+      AZURITE_ACCOUNTS: "devstoreaccount1:${AZURITE_KEY}"
+    ports:
+      - "10000:10000"
+      - "10001:10001"
