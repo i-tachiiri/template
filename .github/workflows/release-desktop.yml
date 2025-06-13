@@ -2,12 +2,15 @@ name: Release Desktop
 on:
   release:
     types: [created]
+
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - name: Publish
-        run: echo "Publishing desktop app..."
+        run: dotnet publish src/DesktopApp/DesktopApp.csproj -c Release -o artifacts
       - name: Upload
-        run: echo "Uploading installer..."
+        run: bash infra/scripts/upload.sh artifacts \$web
+
+
