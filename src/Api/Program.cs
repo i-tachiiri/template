@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Identity.Web;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Api;
+using Infrastructure;
 
 var host = new HostBuilder()
     .ConfigureAppConfiguration((context, config) =>
@@ -17,6 +18,7 @@ var host = new HostBuilder()
         services.Configure<AzureAdB2COptions>(context.Configuration.GetSection("AzureAdB2C"));
         services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddMicrosoftIdentityWebApi(context.Configuration.GetSection("AzureAdB2C"));
+        services.AddBlobStorage(context.Configuration);
     })
     .ConfigureFunctionsWorkerDefaults(worker =>
     {
