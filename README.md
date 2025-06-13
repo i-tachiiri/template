@@ -1,7 +1,7 @@
 # Service Starter Kit Template
 開発環境のテンプレートです。
 
-> **Spec** → see [/spec/dev-environment.md](spec/dev-environment.md)
+> **Spec** → see [/spec/template-spec.md](spec/template-spec.md)
 
 ## Azure AD B2C 設定
 

@@ -43,6 +43,7 @@
   Run `docker-compose up -d` to start and `docker-compose down` to stop.
 * Projects run in VS Code / VS with hot‑reload, hitting container endpoints.
 * **Dev Container** locks .NET SDK, Node, Azure CLI, Bicep versions.
+* **Ubuntu package source** stored at `packages-microsoft-prod.deb` for setting up the SDK locally.
 * **Dockerfile** in `src/Api/` builds the Functions app for container runs.
   Build image via `docker build -t func-api -f src/Api/Dockerfile .`.
 * **Static Web Apps CLI** (`swa start`) serves the Blazor front‑end and proxies
@@ -92,6 +93,7 @@
 ├─ scripts/
 ├─ .editorconfig
 ├─ THIRD_PARTY_NOTICES.md
+├─ packages-microsoft-prod.deb    # Apt source for .NET SDK on Ubuntu
 ├─ dependabot.yml
 ├─ codeql-analysis.yml
 ├─ docker-compose.yml
