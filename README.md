@@ -32,6 +32,14 @@ docker build -t funcapp -f src/Api/Dockerfile src/Api
 docker run -p 7071:80 funcapp
 ```
 
+## docker-compose で依存サービスを起動する
+
+SQL Server と Azurite をまとめて起動できます。
+
+```bash
+docker-compose up -d
+```
+
 ## テスト実行
 
 リポジトリには Solution ファイル `ServiceStarterKit.sln` が含まれています。まず依存パッケージを復元してビルドを行い、その後テストを実行します。
