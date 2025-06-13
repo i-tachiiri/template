@@ -1,0 +1,17 @@
+name: "CodeQL"
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    # The branches for which pull requests will be analyzed.
+    branches: [ main ]
+jobs:
+  analyze:
+    name: Analyze
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: github/codeql-action/init@v3
+        with:
+          languages: csharp
+      - uses: github/codeql-action/analyze@v3
