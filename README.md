@@ -34,8 +34,10 @@ docker run -p 7071:80 funcapp
 
 ## テスト実行
 
-リポジトリには Solution ファイル `ServiceStarterKit.sln` が含まれています。以下のコマンドで単体テストを実行できます。
+リポジトリには Solution ファイル `ServiceStarterKit.sln` が含まれています。まず依存パッケージを復元してビルドを行い、その後テストを実行します。
 
 ```bash
+dotnet restore ServiceStarterKit.sln
+dotnet build --no-restore ServiceStarterKit.sln
 dotnet test --no-build --verbosity normal ServiceStarterKit.sln
 ```
