@@ -4,6 +4,12 @@ using Azure.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
+using OpenTelemetry.Resources;
+using OpenTelemetry.Trace;
+using OpenTelemetry.Metrics;
+using Azure.Monitor.OpenTelemetry.Exporter;
+using OpenTelemetry.Extensions.Hosting;
+using Shared;
 
 namespace Infrastructure;
 
@@ -30,6 +36,20 @@ public static class ServiceCollectionExtensions
         var vaultUrl = config["KeyVault:Url"] ?? throw new InvalidOperationException("KeyVault:Url missing");
         services.AddSingleton(new SecretClient(new Uri(vaultUrl), new DefaultAzureCredential()));
         services.AddSingleton<IKeyVaultService, AzureKeyVaultService>();
+        return services;
+    }
+
+    public static IServiceCollection AddObservability(this IServiceCollection services)
+    {
+        services.AddOpenTelemetry()
+            .ConfigureResource(r => r.AddService("ServiceStarterKit.Api"))
+            .WithTracing(b => b
+                .AddSource(Telemetry.ActivitySourceName)
+                .AddHttpClientInstrumentation()
+                .AddAzureMonitorTraceExporter())
+            .WithMetrics(b => b
+                .AddRuntimeInstrumentation()
+                .AddAzureMonitorMetricExporter());
         return services;
     }
 }

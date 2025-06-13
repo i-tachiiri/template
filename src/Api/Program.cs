@@ -5,6 +5,7 @@ using Microsoft.Identity.Web;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Api;
 using Infrastructure;
+using Shared;
 
 var host = new HostBuilder()
     .ConfigureAppConfiguration((context, config) =>
@@ -21,10 +22,12 @@ var host = new HostBuilder()
         services.AddBlobStorage(context.Configuration);
         services.AddSqlDatabase(context.Configuration);
         services.AddKeyVault(context.Configuration);
+        services.AddObservability();
     })
     .ConfigureFunctionsWorkerDefaults(worker =>
     {
         worker.UseMiddleware<JwtValidationMiddleware>();
+        worker.UseMiddleware<ExceptionLoggingMiddleware>();
     })
     .Build();
 

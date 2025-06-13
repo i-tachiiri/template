@@ -24,10 +24,18 @@ services:
       - KeyVault__Url=https://your-keyvault.vault.azure.net/
       - AZURE_STORAGE_CONNECTION_STRING=UseDevelopmentStorage=true
       - ConnectionStrings__Default=Server=sqlserver,1433;Database=appdb;User Id=sa;Password=Your_password123;Encrypt=False
+      - OTEL_EXPORTER_OTLP_ENDPOINT=http://otelcollector:4317
     ports:
       - "7071:80"
     depends_on:
       - sqlserver
       - azurite
+      - otelcollector
+  otelcollector:
+    image: mcr.microsoft.com/azuremonitor/opentelemetry-collector:latest
+    environment:
+      - AZURE_MONITOR_CONNECTION_STRING=${AZURE_MONITOR_CONNECTION_STRING}
+    ports:
+      - "4317:4317"
 volumes:
   sql_data:
