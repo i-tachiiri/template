@@ -49,6 +49,10 @@ SQL Server と Azurite をまとめて起動できます。
 docker-compose up -d
 ```
 
+## Dev Container を利用する
+
+VS Code の Remote Containers 拡張からこのリポジトリを開くと、`.devcontainer` の設定に基づいた開発環境が自動で構築されます。初回セットアップ時に `docker-compose` で SQL Server や Azurite などの依存サービスが起動します。
+
 
 ## テスト実行
 
