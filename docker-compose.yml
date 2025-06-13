@@ -5,6 +5,8 @@ services:
     environment:
       - ACCEPT_EULA=1
       - MSSQL_SA_PASSWORD=Your_password123
+    volumes:
+      - sql_data:/var/opt/mssql
     ports:
       - "1433:1433"
   azurite:
@@ -14,3 +16,5 @@ services:
     ports:
       - "10000:10000"
       - "10001:10001"
+volumes:
+  sql_data:
