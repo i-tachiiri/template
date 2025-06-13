@@ -9,5 +9,5 @@
     "ghcr.io/devcontainers/features/bicep:1": {}
   },
   "forwardPorts": [7071],
-  "postCreateCommand": "dotnet --version"
+  "postCreateCommand": "dotnet --version && docker-compose up -d sqlserver azurite otelcollector"
 }
