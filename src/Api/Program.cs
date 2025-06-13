@@ -19,6 +19,7 @@ var host = new HostBuilder()
         services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddMicrosoftIdentityWebApi(context.Configuration.GetSection("AzureAdB2C"));
         services.AddBlobStorage(context.Configuration);
+        services.AddSqlDatabase(context.Configuration);
     })
     .ConfigureFunctionsWorkerDefaults(worker =>
     {

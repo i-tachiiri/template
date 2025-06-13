@@ -31,10 +31,18 @@ docker build -t funcapp -f src/Api/Dockerfile src/Api
 # ローカルで起動
 docker run -p 7071:80 funcapp
 ```
-
 ### ローカル Blob Storage
 
 SQL Server と Azurite (Blob エミュレーター) を起動するには `docker-compose up -d` を実行します。Functions からは `AZURE_STORAGE_CONNECTION_STRING=UseDevelopmentStorage=true` を設定してアクセスします。
+=======
+## docker-compose で依存サービスを起動する
+
+SQL Server と Azurite をまとめて起動できます。
+
+```bash
+docker-compose up -d
+```
+
 
 ## テスト実行
 
