@@ -21,6 +21,8 @@ env/
 ```
 
 必要に応じてクライアント ID やシークレットを上書きしてください。Secrets 管理は Key Vault を利用する想定です。
+`KeyVault:Url` キーでボールトの URL を指定します。Docker で実行する際は
+`KeyVault__Url=https://<your-vault>.vault.azure.net/` の形式で環境変数を渡してください。
 
 ## Azure Functions を Docker で実行する
 
